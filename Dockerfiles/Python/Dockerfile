@@ -31,8 +31,8 @@ RUN UID="4000" bash /tmp/scripts/install-common.sh
 ADD https://raw.githubusercontent.com/devcontainers/features/main/src/docker-in-docker/install.sh /tmp/scripts/install-dind.sh
 RUN VERSION="latest" bash /tmp/scripts/install-dind.sh
 
-COPY ./requirements/ /requirements/
-COPY ./scripts/ /scripts/
+COPY ./Dockerfiles/Python/requirements/ /requirements/
+COPY ./common/ /scripts/
 
 WORKDIR /scripts
 RUN ./install-python.sh
