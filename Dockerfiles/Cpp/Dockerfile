@@ -25,7 +25,7 @@ RUN apt-get install -y apt-utils openssh-client gnupg2 dirmngr iproute2 \
         libgssapi-krb5-2 libicu[0-9][0-9] liblttng-ust[0-9] \
         libstdc++6 zlib1g locales sudo ncdu man-db strace gnupg2 \
         build-essential python3-dev build-essential cmake cppcheck valgrind clang lldb llvm gdb \
-        gcc-11-aarch64-linux-gnu g++-11-aarch64-linux-gnu
+        gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
 # clean-up
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
