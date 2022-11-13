@@ -40,6 +40,7 @@ ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicl
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_aarch64_debug   /container/cpp/.conan/profiles/linux_arm64_debug
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_aarch64_debug   /container/cpp/.conan/profiles/
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_aarch64_release /container/cpp/.conan/profiles/
+ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_x86_64_debug    /container/cpp/.conan/profiles/linux_amd64_debug
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_x86_64_debug    /container/cpp/.conan/profiles/
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/.conan/profiles/linux_x86_64_release  /container/cpp/.conan/profiles/
 ADD --chown=4000 https://raw.githubusercontent.com/SoftwareDefinedVehicle/vehicle-app-cpp-sdk/cross-compilation/install_dependencies.sh           /container/cpp/
