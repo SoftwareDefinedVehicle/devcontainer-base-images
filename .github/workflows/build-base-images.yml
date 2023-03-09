@@ -35,7 +35,7 @@ jobs:
       matrix:
         language: [python, cpp]
 
-    name: "Building image"
+    name: Building image
     outputs:
       tag: ${{ steps.get-tag.outputs.tag }}
     runs-on: ubuntu-22.04
@@ -90,6 +90,7 @@ jobs:
     name: Generate SBOM
     runs-on: ubuntu-22.04
     needs: [build-image]
+    if: github.event == "pull_request"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

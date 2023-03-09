@@ -28,7 +28,7 @@ jobs:
       - name: Wait for build-base-images workflow to succeed
         uses: fountainhead/action-wait-for-check@v1.1.0
         with:
-          checkName: Generate SBOM
+          checkName: Building image
           token: ${{ secrets.GITHUB_TOKEN }}
           timeoutSeconds: 5400
           intervalSeconds: 120
