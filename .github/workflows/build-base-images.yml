@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        language: [python]
+        language: [python, cpp]
 
     steps:
       - name: Checkout repository
