@@ -30,104 +30,16 @@ on:
       - main
 
 jobs:
-  build-image:
-    name: Building image
-    outputs:
-      tag: ${{ steps.get-tag.outputs.tag }}
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        language: [python, cpp]
-
+  delete-untagged-images:
+    name: Delete Untagged Images
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Run Linters
-        uses: ./.github/actions/pre-commit-action
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
-          version: v0.9.0
-
-      - name: Get image tag
-        id: get-tag
-        shell: bash
-        run: |
-          TAGS=${{ github.sha }}
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            TAGS="${TAGS},latest"
-          fi
-          echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
-          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
-
-      - id: github-repository-name-case-adjusted
-        name: Prepare repository name in lower case for docker upload.
-        uses: ASzc/change-string-case-action@v5
-        with:
-          string: ${{ github.repository }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build image and push
-        id: image_build
-        uses: devcontainers/ci@v0.3
-        with:
-          imageName: ghcr.io/${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}/${{ matrix.language }}
-          imageTag: ${{ steps.get-tag.outputs.tags }}
-          push: always
-          platform: linux/amd64,linux/arm64
-          noCache: true
-          subFolder: ./Dockerfiles/${{ matrix.language }}/
-
-  generate-sbom:
-    name: Generate SBOM
-    runs-on: ubuntu-22.04
-    needs: [build-image]
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Install Syft
-        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Generate SBOM
-        run: |
-          architectures=(arm64 amd64)
-          languages=(cpp python)
-          for arch in "${architectures[@]}"
-          do
-            for lang in "${languages[@]}"
-            do
-              syft --platform $arch \
-              -o template=SBOM/Markdown/$lang\_$arch.md -t templates/SBOM_md.tmpl \
-              -o spdx-json=SBOM/SPDX/$lang\_$arch.spdx.json \
-              -o cyclonedx-json=SBOM/CycloneDX/$lang\_$arch.cyclonedx.json \
-              ghcr.io/${{ github.repository }}/$lang:${{ needs.build-image.outputs.tag }}
-            done
-          done
-          # fix for different SPDX versions
-          sed -i -e 's/PACKAGE-MANAGER/PACKAGE_MANAGER/g' SBOM/SPDX/*.spdx.json
-
-      - name: Upload SBOM as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: SBOM
-          path: |
-            SBOM/*
-
-      - uses: EndBug/add-and-commit@v9
-        id: push-changes
-        with:
-          message: 'Updated SBOM'
-          new_branch: sbom
-          push: origin sbom --set-upstream --force
+          # NOTE: at now only orgs is supported
+          owner: SoftwareDefinedVehicle
+          name: devcontainer-base-images/python
+          # NOTE: using Personal Access Token
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Keep latest N untagged images
+          untagged-keep-latest: 3
