@@ -34,7 +34,7 @@ jobs:
     name: Delete Untagged Images
     runs-on: ubuntu-latest
     steps:
-      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+    - uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
           # NOTE: at now only orgs is supported
           owner: SoftwareDefinedVehicle
@@ -43,3 +43,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # Keep latest N untagged images
           untagged-keep-latest: 3
+
+    - uses: quartx-analytics/ghcr-cleaner@v1
+        with:
+          owner-type: org # or user
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository_owner: ${{ github.repository_owner }}
+          package-name: devcontainer-base-images/python
+          delete-untagged: true
